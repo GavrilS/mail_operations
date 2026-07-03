@@ -11,12 +11,50 @@ Functionality:
 import os
 import poplib
 
-USER = os.getenv('ABV_USER')
-PASS = os.getenv('ABV_PASSWORD')
-POP_SERVER = os.getenv('ABV_POP_SERVER')
-POP_PORT = os.getenv('ABV_POP_PORT')
 
-class ABVConnector:
+POP_CLIENT_DEFAULTS = {
+    'user': os.getenv('ABV_USER'),
+    'password': os.getenv('ABV_PASSWORD'),
+    'server': os.getenv('ABV_POP_SERVER'),
+    'port': os.getenv('ABV_POP_PORT'),
+    'connection_type': 'pop'
+}
 
-    def __init__(self):
-        pass
+class ABVClient:
+
+    def __init__(self, client_args=None, *args, **kwargs):
+        self._parse_client_args(client_args)
+
+    def _parse_client_args(self, client_args):
+        print('Client args: ', client_args)
+        if not client_args:
+            raise Exception('Missing arguments for setting up ABV mail client!')
+        
+        if not client_args.get('user', None):
+            raise Exception('Missing user name for the ABV mail client!')
+        
+        if not client_args.get('pass', None):
+            raise Exception('Missing password for ABV mail client!')
+        
+        if not client_args.get('server', None):
+            raise Exception('Missing server for ABV mail client!')
+        
+        if not client_args.get('port', None):
+            raise Exception('Missing port for ABV mail client!')
+        
+        self.user = client_args['user']
+        self.password = client_args['password']
+        self.server = client_args['server']
+        self.port = int(client_args['port'])
+        self.connection_type = client_args.get('connection_type', 'pop')
+
+    def _set_connection(self):
+        self.client = poplib.POP3_SSL(self.user, self.port)
+
+    def retrieve_messages(self, num_messages=10):
+        print(self.client.list())
+
+
+if __name__=='__main__':
+    client = ABVClient(client_args=POP_CLIENT_DEFAULTS)
+    client.retrieve_messages()
