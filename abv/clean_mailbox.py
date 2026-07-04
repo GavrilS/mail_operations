@@ -20,6 +20,13 @@ POP_CLIENT_DEFAULTS = {
     'connection_type': 'pop'
 }
 
+LINES_TO_SAVE = [
+    'Date: ',
+    'To: ',
+    'From: ',
+    'Subject: '
+]
+
 class ABVClient:
 
     def __init__(self, client_args=None, *args, **kwargs):
@@ -50,10 +57,27 @@ class ABVClient:
         self.connection_type = client_args.get('connection_type', 'pop')
 
     def _set_connection(self):
-        self.client = poplib.POP3_SSL(self.user, self.port)
+        if 'pop' in self.connection_type.lower():
+            self.client = poplib.POP3_SSL(self.server, self.port)
+            self.client.user(self.user)
+            self.client.pass_(self.password)
+        else:
+            raise Exception(f"ABV client does not support connection of type: {self.connection_type}")
 
-    def retrieve_messages(self, num_messages=10):
-        print(self.client.list())
+    def retrieve_messages(self, num_messages=1):
+        messages_to_process = []
+        for i in range(num_messages):
+            message = []
+            for j in self.client.retr(i+1)[1]:
+                line = j.decode('utf-8')
+                for k in LINES_TO_SAVE:
+                    if line.startswith(k):
+                        message.append(line)
+                        break
+            messages_to_process.append(message)
+        
+        print('Messages to process: ', messages_to_process)
+
 
 
 if __name__=='__main__':
