@@ -1,5 +1,5 @@
 '''
-This script is handling connecting to an abv.bg mail box, retrieving X number of emails and 
+This module is handling connecting to an abv.bg mail box, retrieving X number of emails and 
 archiving them.
 
 Functionality:
@@ -77,6 +77,7 @@ class ABVClient:
             messages_to_process.append(message)
         
         print('Messages to process: ', messages_to_process)
+        return messages_to_process
 
 
 
