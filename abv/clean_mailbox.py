@@ -24,6 +24,7 @@ class ABVClient:
 
     def __init__(self, client_args=None, *args, **kwargs):
         self._parse_client_args(client_args)
+        self._set_connection()
 
     def _parse_client_args(self, client_args):
         print('Client args: ', client_args)
@@ -33,7 +34,7 @@ class ABVClient:
         if not client_args.get('user', None):
             raise Exception('Missing user name for the ABV mail client!')
         
-        if not client_args.get('pass', None):
+        if not client_args.get('password', None):
             raise Exception('Missing password for ABV mail client!')
         
         if not client_args.get('server', None):
