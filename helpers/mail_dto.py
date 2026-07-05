@@ -56,3 +56,6 @@ class EmailDTO:
         if not subject:
             raise Exception('Subject must be set!')
         self.__subject = subject
+
+    def __str__(self):
+        return f"Email Data | Date: {self.date} | Receiver: {self.receiver} | Sender: {self.sender} | Subject: {self.subject}"
