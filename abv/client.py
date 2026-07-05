@@ -78,9 +78,18 @@ class ABVClient:
         
         print('Messages to process: ', messages_to_process)
         return messages_to_process
+    
+    def check_message_format(self, num_messages=1):
+        for i in range(num_messages):
+            for j in self.client.retr(i+1)[1]:
+                print(j)
+                print('-'*100)
+            print('='*100)
+            print('='*100)
 
 
 
 if __name__=='__main__':
     client = ABVClient(client_args=POP_CLIENT_DEFAULTS)
     client.retrieve_messages()
+    # client.check_message_format()
