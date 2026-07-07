@@ -10,6 +10,7 @@ Functionality:
 '''
 import os
 import poplib
+from helpers.mail_dto import EmailDTO
 
 
 POP_CLIENT_DEFAULTS = {
@@ -20,14 +21,14 @@ POP_CLIENT_DEFAULTS = {
     'connection_type': 'pop'
 }
 
-LINES_TO_SAVE = [
-    'Date: ',
-    'To: ',
-    'From: ',
-    'Subject: '
-]
+LINES_TO_SAVE = {
+    'date': 'Date: ',
+    'receiver': 'To: ',
+    'sender': 'From: ',
+    'subject': 'Subject: '
+}
 
-class ABVClient:
+class PopClient:
 
     def __init__(self, client_args=None, *args, **kwargs):
         self._parse_client_args(client_args)
@@ -67,14 +68,21 @@ class ABVClient:
     def retrieve_messages(self, num_messages=1):
         messages_to_process = []
         for i in range(num_messages):
-            message = []
+            message = {}
             for j in self.client.retr(i+1)[1]:
                 line = j.decode('utf-8')
-                for k in LINES_TO_SAVE:
-                    if line.startswith(k):
-                        message.append(line)
+                for k, v in LINES_TO_SAVE.items():
+                    if line.startswith(v):
+                        message[k] = line
                         break
-            messages_to_process.append(message)
+            messages_to_process.append(
+                EmailDTO(
+                    date=message['date'],
+                    receiver=message['receiver'],
+                    sender=message['sender'],
+                    subject=message['subject']
+                )
+            )
         
         print('Messages to process: ', messages_to_process)
         return messages_to_process
@@ -90,6 +98,6 @@ class ABVClient:
 
 
 if __name__=='__main__':
-    client = ABVClient(client_args=POP_CLIENT_DEFAULTS)
+    client = PopClient(client_args=POP_CLIENT_DEFAULTS)
     client.retrieve_messages()
     # client.check_message_format()
