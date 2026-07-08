@@ -58,4 +58,5 @@ class EmailDTO:
         self.__subject = subject
 
     def __str__(self):
-        return f"Email Data | Date: {self.date} | Receiver: {self.receiver} | Sender: {self.sender} | Subject: {self.subject}"
+        # return f"Email Data | Date: {self.date} | Receiver: {self.receiver} | Sender: {self.sender} | Subject: {self.subject}"
+        return f"Email Data | {self.date} | {self.receiver} | {self.sender} | {self.subject}"

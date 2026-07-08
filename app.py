@@ -7,15 +7,19 @@ from clients.pop import PopClient, POP_CLIENT_DEFAULTS
 
 ABV_MAIL_BACKUP_DIR = 'backup'
 ABV_MAIL_BACKUP_FILE = 'abv_file'
+MAIL_SAVED_SUCCESS_MSG = 'Successfully saved the email data.'
+NUM_MESSAGES_TO_PROCESS = 1
 
 
 
 def main():
     client = PopClient(client_args=POP_CLIENT_DEFAULTS)
-    messages = client.retrieve_messages()
-    # client.check_message_format()
-    for message in messages:
-        save_email_data_to_file(ABV_MAIL_BACKUP_DIR, ABV_MAIL_BACKUP_FILE, message)
+    # messages = client.retrieve_messages(NUM_MESSAGES_TO_PROCESS)
+    client.check_message_format(NUM_MESSAGES_TO_PROCESS)
+    # for message in messages:
+    #     result = save_email_data_to_file(ABV_MAIL_BACKUP_DIR, ABV_MAIL_BACKUP_FILE, message)
+    #     if result == MAIL_SAVED_SUCCESS_MSG:
+    #         print('We can delete the message')
     
 
 

@@ -95,9 +95,8 @@ class PopClient:
             print('='*100)
             print('='*100)
 
-
-
-if __name__=='__main__':
-    client = PopClient(client_args=POP_CLIENT_DEFAULTS)
-    client.retrieve_messages()
-    # client.check_message_format()
+    def mark_messages_for_deletion(self, num_messages=1):
+        self.client.dele(num_messages)
+    
+    def quit_connection(self):
+        self.client.quit()
