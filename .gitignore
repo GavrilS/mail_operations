@@ -219,3 +219,4 @@ __marimo__/
 
 email.env
 backup/*
+credentials.json
