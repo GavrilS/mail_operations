@@ -55,17 +55,31 @@ class PopClient:
         self.password = client_args['password']
         self.server = client_args['server']
         self.port = int(client_args['port'])
-        self.connection_type = client_args.get('connection_type', 'pop')
 
     def _set_connection(self):
-        if 'pop' in self.connection_type.lower():
-            self.client = poplib.POP3_SSL(self.server, self.port)
-            self.client.user(self.user)
-            self.client.pass_(self.password)
-        else:
-            raise Exception(f"ABV client does not support connection of type: {self.connection_type}")
+        self.client = poplib.POP3_SSL(self.server, self.port)
+        self.client.user(self.user)
+        self.client.pass_(self.password)
 
-    def retrieve_messages(self, num_messages=1):
+    def process_messages(self, retrieve=True, delete=True, check_messages=False, message_number=1):
+        self._set_connection()
+
+        messages = []
+        if retrieve:
+            messages = self._retrieve_messages(message_number)
+        
+        if delete:
+            self._mark_messages_for_deletion(message_number)
+
+        if check_messages:
+            self._check_message_format()
+
+        self._quit_connection()
+
+        return messages
+
+    def _retrieve_messages(self, num_messages=1):
+        
         messages_to_process = []
         for i in range(num_messages):
             message = {}
@@ -84,10 +98,9 @@ class PopClient:
                 )
             )
         
-        print('Messages to process: ', messages_to_process)
         return messages_to_process
     
-    def check_message_format(self, num_messages=1):
+    def _check_message_format(self, num_messages=1):
         for i in range(num_messages):
             for j in self.client.retr(i+1)[1]:
                 print(j)
@@ -95,8 +108,9 @@ class PopClient:
             print('='*100)
             print('='*100)
 
-    def mark_messages_for_deletion(self, num_messages=1):
+    def _mark_messages_for_deletion(self, num_messages=1):
         self.client.dele(num_messages)
     
-    def quit_connection(self):
+    def _quit_connection(self):
         self.client.quit()
+        self.client = None
