@@ -221,3 +221,4 @@ email.env
 backup/*
 credentials.json
 token.json
+docs.txt

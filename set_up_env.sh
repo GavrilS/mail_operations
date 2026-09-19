@@ -10,6 +10,6 @@ echo "Installing python dependencies"
 
 source env/bin/activate
 
-python3 -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt --upgrade
 
 deactivate
