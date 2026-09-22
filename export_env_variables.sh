@@ -4,4 +4,7 @@ echo "To have the environment variable persist in the current terminal session, 
 echo ". export_env_variables.sh"
 
 echo "Exporting environment varibles from the 'email.env' file"
-export $(xargs < email.env)
+# export $(xargs < email.env) # Gave up on it as it splits values with spaces
+set -a
+source email.env
+set +a
