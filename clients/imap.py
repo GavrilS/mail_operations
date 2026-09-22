@@ -9,6 +9,7 @@ IMAP_CLIENT_DEFAULTS = {
 }
 DEFAULT_FOLDER = 'INBOX'
 
+
 class ImapHandler:
 
     def __init__(self, client_args=IMAP_CLIENT_DEFAULTS):
@@ -28,33 +29,49 @@ class ImapHandler:
         self.password = client_args['password']
         self.server = client_args['server']
 
-    def get_message_ids(self, num_messages=1, fetch_messages=False):
-        messages = []
+    def process_messages(self, num_messages=1, fetch_messages=False, delete_messages=False, trash_folder=None):
         with IMAPClient(self.server, ssl=True) as client:
             client.login(self.email, self.password)
             client.select_folder(DEFAULT_FOLDER)
 
-            all_msg_ids = client.search(['ALL'])
-            # print('All msg ids: ', all_msg_ids)
+            message_ids = self._get_message_ids(client, num_messages)
+            messages = []
+            if fetch_messages:
+                messages = self._fetch_messages(client, message_ids)
 
-            oldest_ids = all_msg_ids[:num_messages]
-            print('Oldest ids: ', oldest_ids)
+            if delete_messages:
+                self._delete_messages(client, message_ids, trash_folder)
 
-            if not fetch_messages:
-                return oldest_ids, None
+            return messages
 
-            response = client.fetch(oldest_ids, ['ENVELOPE'])
+    def _get_message_ids(self, client, num_messages=1):
+        messages = []
 
-            for msg_id, data in response.items():
-                envelope = data[b'ENVELOPE']
-                messages.append({
-                    'subject': envelope.subject.decode() if envelope.subject else "No Subject",
-                    'date': envelope.date,
-                    'sender': envelope.sender,
-                    'receiver': envelope.to,
-                    'message_id': msg_id
-                })
-                # print('envelope: ', envelope)
-                # print('*'*100)
+        all_msg_ids = client.search(['ALL'])
+        # print('All msg ids: ', all_msg_ids)
 
-            return oldest_ids, messages
+        oldest_ids = all_msg_ids[:num_messages]
+        return oldest_ids
+
+    def _fetch_messages(self, client, message_ids):
+        response = client.fetch(message_ids, ['ENVELOPE'])
+        messages = []
+        
+        for msg_id, data in response.items():
+            envelope = data[b'ENVELOPE']
+            messages.append({
+                'subject': envelope.subject.decode() if envelope.subject else "No Subject",
+                'date': envelope.date,
+                'sender': envelope.sender,
+                'receiver': envelope.to,
+                'message_id': msg_id
+            })
+            # print('envelope: ', envelope)
+            # print('*'*100)
+        
+        return messages
+
+    def _delete_messages(self, client, message_ids, trash_folder):
+        if trash_folder:
+            client.copy(message_ids, trash_folder)
+        client.delete_messages(message_ids)
