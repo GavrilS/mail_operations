@@ -29,4 +29,9 @@ client_args = {
 
 client = ImapHandler(client_args=client_args)
 
-client.get_message_ids(10)
+# client.get_message_ids(10)
+ids, messages = client.get_message_ids(3, fetch_messages=True)
+
+for message in messages:
+    print('Message: ', message)
+    print('*'*100)
