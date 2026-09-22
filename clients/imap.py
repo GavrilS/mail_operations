@@ -37,9 +37,11 @@ class ImapHandler:
             message_ids = self._get_message_ids(client, num_messages)
             messages = []
             if fetch_messages:
+                print('Fetching full messages')
                 messages = self._fetch_messages(client, message_ids)
 
             if delete_messages:
+                print('Deleting messages. Trash folder - ', trash_folder)
                 self._delete_messages(client, message_ids, trash_folder)
 
             return messages
@@ -51,6 +53,7 @@ class ImapHandler:
         # print('All msg ids: ', all_msg_ids)
 
         oldest_ids = all_msg_ids[:num_messages]
+        print('Message ids: ', oldest_ids)
         return oldest_ids
 
     def _fetch_messages(self, client, message_ids):
@@ -75,3 +78,10 @@ class ImapHandler:
         if trash_folder:
             client.copy(message_ids, trash_folder)
         client.delete_messages(message_ids)
+        client.expunge()
+
+    def list_folders(self):
+        with IMAPClient(self.server, ssl=True) as client:
+            client.login(self.email, self.password)
+            for flags, delimeter, name in client.list_folders():
+                print(flags, delimeter, name)
