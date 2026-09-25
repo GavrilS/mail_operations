@@ -1,5 +1,4 @@
 import os
-import email
 from imapclient import IMAPClient
 
 IMAP_CLIENT_DEFAULTS = {

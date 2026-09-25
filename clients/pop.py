@@ -14,11 +14,10 @@ from helpers.mail_dto import EmailDTO
 
 
 POP_CLIENT_DEFAULTS = {
-    'user': os.getenv('ABV_USER'),
-    'password': os.getenv('ABV_PASSWORD'),
-    'server': os.getenv('ABV_POP_SERVER'),
-    'port': os.getenv('ABV_POP_PORT'),
-    'connection_type': 'pop'
+    'user': os.getenv('POP_USER'),
+    'password': os.getenv('POP_PASSWORD'),
+    'server': os.getenv('POP_SERVER'),
+    'port': os.getenv('POP_PORT')
 }
 
 LINES_TO_SAVE = {
