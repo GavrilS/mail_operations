@@ -222,3 +222,6 @@ backup/*
 credentials.json
 token.json
 docs/*
+
+configs/
+!configs/example.conf
