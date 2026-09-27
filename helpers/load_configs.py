@@ -4,29 +4,45 @@ automation flow.
 '''
 import configparser
 
+REQUIRED_CONFIG_OPTIONS = [
+    'server', 'account', 'password', 'max_messages'
+]
+
 
 class ConfigLoader:
 
-    def __init__(self, config_file=None):
+    def __init__(self, config_files=None):
         self.config_list = []
-        self._parse_config_file(config_file)
+        self._parse_config_file(config_files)
 
-    def _parse_config_file(self, config_file):
-        if not config_file:
+    def get_configs(self):
+        return self.config_list
+
+    def load_configs(self, config_files=None):
+        self.config_list = []
+        self._parse_config_file(config_files)
+        return self.config_list
+
+    def _parse_config_file(self, config_files):
+        if not config_files:
             print('No config file was provided!')
             return None
 
         parser = configparser.RawConfigParser()
-        print(parser.read(config_file))
         sections = parser.sections()
         for section in sections:
-            print('Section: ', section)
+            config_section = {
+                'section': section
+            }
             options = parser.options(section)
-            print('Options: ', options)
             for option in options:
-                print(f"{option}: {parser.get(section=section, option=option)}")
-            print('*'*100)
+                config_section[option] = parser.get(section=section, option=option)
 
+            if self._validate_config_section(config_section):
+                self.config_list.append(config_section)
 
-if __name__=='__main__':
-    loader = ConfigLoader(['configs/example.conf', 'configs/test.conf'])
+    def _validate_config_section(self, config_section):
+        if all(option in config_section for option in REQUIRED_CONFIG_OPTIONS):
+            return True
+        print(f"Config section {config_section['section']} is missing required options.")
+        return False
