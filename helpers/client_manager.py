@@ -2,11 +2,20 @@
 Manager class that determines what is the proper client class to use based on the email 
 server.
 '''
+from clients.imap import IMAPClient
+from clients.pop import PopClient
 
-class ClientManager:
+EMAIL_CLIENTS = {
+    'gmail.com': 'imap',
+    'abv.bg': 'pop'
+}
 
-    def __init__(self, config):
-        self.config = config
 
-    def get_client(self):
-        return
+def get_client(config):
+    if 'gmail' in config['server']:
+        return IMAPClient(config)
+    elif 'abv' in config['server']:
+        return PopClient(config)
+    else:
+        print(f"The server {config['server']} is not currently supported!")
+        return None
