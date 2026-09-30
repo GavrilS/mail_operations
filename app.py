@@ -26,8 +26,13 @@ def main():
 
 
 def process_configs(config_loader, file):
-    pass
+    configs = config_loader.load_configs(file)
 
+    print('Configs: ', configs)
+    for config in configs:
+        client = get_client(config)
+        print('Client: ', client)
+        print('*'*100)
 
 
 
