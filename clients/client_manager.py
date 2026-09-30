@@ -5,11 +5,6 @@ server.
 from clients.imap import IMAPClient
 from clients.pop import PopClient
 
-EMAIL_CLIENTS = {
-    'gmail.com': 'imap',
-    'abv.bg': 'pop'
-}
-
 
 def get_client(config):
     if 'gmail' in config['server']:
