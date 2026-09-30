@@ -11,9 +11,8 @@ REQUIRED_CONFIG_OPTIONS = [
 
 class ConfigLoader:
 
-    def __init__(self, config_files=None):
+    def __init__(self):
         self.config_list = []
-        self._parse_config_file(config_files)
 
     def get_configs(self):
         return self.config_list

@@ -19,6 +19,15 @@ def main():
         print('No files were specified - ending execution!')
         return
 
+    config_loader = ConfigLoader()
+
+    for file in file_paths:
+        process_configs(config_loader, file)
+
+
+def process_configs(config_loader, file):
+    pass
+
 
 
 
