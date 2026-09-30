@@ -1,25 +1,24 @@
 '''
 Runs a backup and clear of a mail box.
 '''
+import sys
 from helpers.save_emails_to_file import save_email_data_to_file
-from clients.pop import PopClient, POP_CLIENT_DEFAULTS
-
-ABV_MAIL_BACKUP_DIR = 'backup'
-ABV_MAIL_BACKUP_FILE = 'abv_file'
-MAIL_SAVED_SUCCESS_MSG = 'Successfully saved the email data.'
-NUM_MESSAGES_TO_PROCESS = 1
-
+from helpers.load_configs import ConfigLoader
+from clients.client_manager import get_client
 
 
 def main():
-    client = PopClient(client_args=POP_CLIENT_DEFAULTS)
-    # messages = client.process_messages(retrieve=True, delete=False)
-    # messages = client.process_messages(retrieve=True, delete=True)
-    messages = client.process_messages(retrieve=False, delete=False, check_messages=True)
-    
-    for message in messages:
-        print('Message: ', message)
-        print('_'*100)
+    file_paths = []
+    if not len(sys.argv) > 1:
+        file_paths = input('File paths for configs were not specified when running the script. You can pass multiple file paths separated by empty space: ').split(' ')
+    else:
+        for file in sys.argv[1:]:
+            file_paths.append(file)
+
+    if not len(file_paths) > 0:
+        print('No files were specified - ending execution!')
+        return
+
 
 
 
