@@ -31,20 +31,20 @@ class ConfigLoader:
         self.parser.read(config_files)
         sections = self.parser.sections()
         for section in sections:
-            print('Section: ', section)
+            # print('Section: ', section)
             config_section = {
                 'section': section
             }
             options = self.parser.options(section)
-            print('Options: ', options)
+            # print('Options: ', options)
             for option in options:
                 config_section[option] = self.parser.get(section=section, option=option)
 
             if self._validate_config_section(config_section):
                 self.config_list.append(config_section)
 
-            print('Config section: ', config_section)
-            print('*'*100)
+            # print('Config section: ', config_section)
+            # print('*'*100)
 
     def _validate_config_section(self, config_section):
         if all(option in config_section for option in REQUIRED_CONFIG_OPTIONS):
