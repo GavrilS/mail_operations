@@ -8,9 +8,9 @@ Functionality:
     - save them for future analysis
     - archive the messages in the mail box
 '''
-import os
 import poplib
 from helpers.mail_dto import EmailDTO
+from clients.basic_client import BasicClient
 
 
 LINES_TO_SAVE = {
@@ -20,9 +20,10 @@ LINES_TO_SAVE = {
     'subject': 'Subject: '
 }
 
-class PopClient:
+class PopClient(BasicClient):
 
     def __init__(self, client_args=None, *args, **kwargs):
+        self.cls_name = self.__class__.__name__
         self._parse_client_args(client_args)
         self._set_connection()
 
@@ -43,7 +44,7 @@ class PopClient:
         if not client_args.get('port', None):
             raise Exception('Missing port for Pop mail client!')
         
-        self.user = client_args['user']
+        self.email = client_args['email']
         self.password = client_args['password']
         self.server = client_args['server']
         self.port = int(client_args['port'])

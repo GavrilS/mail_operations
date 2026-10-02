@@ -1,13 +1,13 @@
-import os
 from imapclient import IMAPClient
-
+from clients.basic_client import BasicClient
 
 DEFAULT_FOLDER = 'INBOX'
 
 
-class ImapHandler:
+class ImapHandler(BasicClient):
 
     def __init__(self, client_args=None):
+        self.cls_name = self.__class__.__name__
         self._parse_args(client_args)
 
     def _parse_args(self, client_args):
