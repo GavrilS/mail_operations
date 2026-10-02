@@ -19,14 +19,15 @@ def main():
         print('No files were specified - ending execution!')
         return
 
+    print('File paths: ', file_paths)
+
     config_loader = ConfigLoader()
+    configs = config_loader.load_configs(file_paths)
 
-    for file in file_paths:
-        process_configs(config_loader, file)
+    process_config(configs)
 
 
-def process_configs(config_loader, file):
-    configs = config_loader.load_configs(file)
+def process_config(configs):
 
     print('Configs: ', configs)
     for config in configs:
