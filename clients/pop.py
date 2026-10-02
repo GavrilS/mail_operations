@@ -1,5 +1,5 @@
 '''
-This module is handling connecting to an abv.bg mail box, retrieving X number of emails and 
+This module is handling connecting to a mail box with pop, retrieving X number of emails and 
 archiving them.
 
 Functionality:
@@ -12,13 +12,6 @@ import os
 import poplib
 from helpers.mail_dto import EmailDTO
 
-
-POP_CLIENT_DEFAULTS = {
-    'user': os.getenv('POP_USER'),
-    'password': os.getenv('POP_PASSWORD'),
-    'server': os.getenv('POP_SERVER'),
-    'port': os.getenv('POP_PORT')
-}
 
 LINES_TO_SAVE = {
     'date': 'Date: ',
@@ -36,19 +29,19 @@ class PopClient:
     def _parse_client_args(self, client_args):
         print('Client args: ', client_args)
         if not client_args:
-            raise Exception('Missing arguments for setting up ABV mail client!')
+            raise Exception('Missing arguments for setting up Pop mail client!')
         
-        if not client_args.get('user', None):
-            raise Exception('Missing user name for the ABV mail client!')
+        if not client_args.get('email', None):
+            raise Exception('Missing email account for the Pop mail client!')
         
         if not client_args.get('password', None):
-            raise Exception('Missing password for ABV mail client!')
+            raise Exception('Missing password for Pop mail client!')
         
         if not client_args.get('server', None):
-            raise Exception('Missing server for ABV mail client!')
+            raise Exception('Missing server for Pop mail client!')
         
         if not client_args.get('port', None):
-            raise Exception('Missing port for ABV mail client!')
+            raise Exception('Missing port for Pop mail client!')
         
         self.user = client_args['user']
         self.password = client_args['password']

@@ -1,17 +1,13 @@
 import os
 from imapclient import IMAPClient
 
-IMAP_CLIENT_DEFAULTS = {
-    'email': os.getenv('IMAP_ACC', ''),
-    'password': os.getenv('IMAP_PASS', ''),
-    'server': os.getenv('IMAP_SERVER', '')
-}
+
 DEFAULT_FOLDER = 'INBOX'
 
 
 class ImapHandler:
 
-    def __init__(self, client_args=IMAP_CLIENT_DEFAULTS):
+    def __init__(self, client_args=None):
         self._parse_args(client_args)
 
     def _parse_args(self, client_args):
