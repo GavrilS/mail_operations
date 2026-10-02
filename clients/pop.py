@@ -54,14 +54,14 @@ class PopClient(BasicClient):
         self.client.user(self.user)
         self.client.pass_(self.password)
 
-    def process_messages(self, retrieve=True, delete=True, check_messages=False, message_number=1):
+    def process_messages(self, fetch_messages=True, delete_messages=True, check_messages=False, message_number=1):
         self._set_connection()
 
         messages = []
-        if retrieve:
+        if fetch_messages:
             messages = self._retrieve_messages(message_number)
         
-        if delete:
+        if delete_messages:
             self._mark_messages_for_deletion(message_number)
 
         if check_messages:

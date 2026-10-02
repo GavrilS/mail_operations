@@ -24,7 +24,7 @@ class ImapHandler(BasicClient):
         self.password = client_args['password']
         self.server = client_args['server']
 
-    def process_messages(self, num_messages=1, fetch_messages=False, delete_messages=False, trash_folder=None):
+    def process_messages(self, num_messages=1, fetch_messages=False, delete_messages=False, trash_folder=None, list_folders=False):
         with IMAPClient(self.server, ssl=True) as client:
             client.login(self.email, self.password)
             client.select_folder(DEFAULT_FOLDER)
@@ -38,6 +38,9 @@ class ImapHandler(BasicClient):
             if delete_messages:
                 print('Deleting messages. Trash folder - ', trash_folder)
                 self._delete_messages(client, message_ids, trash_folder)
+
+            if list_folders:
+                self._list_folders()
 
             return messages
 
@@ -75,7 +78,7 @@ class ImapHandler(BasicClient):
         client.delete_messages(message_ids)
         client.expunge()
 
-    def list_folders(self):
+    def _list_folders(self):
         with IMAPClient(self.server, ssl=True) as client:
             client.login(self.email, self.password)
             for flags, delimeter, name in client.list_folders():
