@@ -5,7 +5,7 @@ automation flow.
 import configparser
 
 REQUIRED_CONFIG_OPTIONS = [
-    'server', 'account', 'password', 'max_messages'
+    'server', 'email_account', 'password', 'max_messages'
 ]
 
 
@@ -13,6 +13,7 @@ class ConfigLoader:
 
     def __init__(self):
         self.config_list = []
+        self.parser = configparser.RawConfigParser()
 
     def get_configs(self):
         return self.config_list
@@ -27,18 +28,23 @@ class ConfigLoader:
             print('No config file was provided!')
             return None
 
-        parser = configparser.RawConfigParser()
-        sections = parser.sections()
+        self.parser.read(config_files)
+        sections = self.parser.sections()
         for section in sections:
+            print('Section: ', section)
             config_section = {
                 'section': section
             }
-            options = parser.options(section)
+            options = self.parser.options(section)
+            print('Options: ', options)
             for option in options:
-                config_section[option] = parser.get(section=section, option=option)
+                config_section[option] = self.parser.get(section=section, option=option)
 
             if self._validate_config_section(config_section):
                 self.config_list.append(config_section)
+
+            print('Config section: ', config_section)
+            print('*'*100)
 
     def _validate_config_section(self, config_section):
         if all(option in config_section for option in REQUIRED_CONFIG_OPTIONS):
