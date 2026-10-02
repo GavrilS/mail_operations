@@ -5,7 +5,7 @@ automation flow.
 import configparser
 
 REQUIRED_CONFIG_OPTIONS = [
-    'server', 'email_account', 'password', 'max_messages'
+    'server', 'email', 'password', 'max_messages'
 ]
 
 
