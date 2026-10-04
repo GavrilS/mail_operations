@@ -9,12 +9,12 @@ Required fields:
     - subject - the subject of the email
 '''
 
-def create_email_dto(date=None, receiver=None, sender=None, subject=None):
+def create_email_dto(date=None, receiver=None, sender=None, subject=None, *args, **kwargs):
     return EmailDTO(date, receiver, sender, subject)
 
 class EmailDTO:
 
-    def __init__(self,date=None,receiver=None,sender=None,subject=None):
+    def __init__(self,date=None,receiver=None,sender=None,subject=None, *args, **kwargs):
         self.date = date
         self.receiver = receiver
         self.sender = sender
