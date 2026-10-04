@@ -33,8 +33,14 @@ def process_config(configs):
     print('Configs: ', configs)
     for config in configs:
         client = get_client(config)
-        client.process_messages(options=config, dto_creator=create_email_dto)
         print('Client: ', client)
+        messages = client.process_messages(options=config, dto_creator=create_email_dto)
+        if messages:
+            print('There are messages to save!')
+            # TODO Add the backup functionality and see what options are there to split the 
+            # process messages functionality when there is a delete flag to first back up and 
+            # then delete the messages
+        print('Messages: ', messages)
         print('*'*100)
 
 
