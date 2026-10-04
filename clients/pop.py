@@ -89,10 +89,10 @@ class PopClient(BasicClient):
 
         return messages
 
-    def _retrieve_messages(self, num_messages=1, dto_creator=None):
+    def _retrieve_messages(self, max_messages=1, dto_creator=None):
         
         messages_to_process = []
-        for i in range(num_messages):
+        for i in range(max_messages):
             message = {}
             for j in self.client.retr(i+1)[1]:
                 line = j.decode('utf-8')
@@ -112,16 +112,16 @@ class PopClient(BasicClient):
         
         return messages_to_process
     
-    def _check_message_format(self, num_messages=1):
-        for i in range(num_messages):
+    def _check_message_format(self, max_messages=1):
+        for i in range(max_messages):
             for j in self.client.retr(i+1)[1]:
                 print(j)
                 print('-'*100)
             print('='*100)
             print('='*100)
 
-    def _mark_messages_for_deletion(self, num_messages=1):
-        self.client.dele(num_messages)
+    def _mark_messages_for_deletion(self, max_messages=1):
+        self.client.dele(max_messages)
     
     def _quit_connection(self):
         self.client.quit()
