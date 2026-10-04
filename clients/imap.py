@@ -48,7 +48,6 @@ class ImapHandler(BasicClient):
         The last parameter is a function creating an email dto to carry the data from the 
         different clients in a standard format.
         '''
-
         messages = []
         
         if not options or not dto_creator:
@@ -59,7 +58,7 @@ class ImapHandler(BasicClient):
                 client.login(self.email, self.password)
                 client.select_folder(DEFAULT_FOLDER)
 
-                message_ids = self._get_message_ids(client, options.get('max_messages', 1))
+                message_ids = self._get_message_ids(client, int(options.get('max_messages', 1)))
 
                 if options.get('fetch_messages', False):
                     print('Fetching full messages')

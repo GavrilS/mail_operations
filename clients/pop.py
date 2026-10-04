@@ -77,13 +77,13 @@ class PopClient(BasicClient):
             self._set_connection()
 
             if options.get('fetch_messages', False):
-                messages = self._retrieve_messages(options.get('max_messages', 1), dto_creator)
+                messages = self._retrieve_messages(int(options.get('max_messages', 1)), dto_creator)
             
             if options.get('delete_messages', False):
-                self._mark_messages_for_deletion(options.get('max_messages', 1))
+                self._mark_messages_for_deletion(int(options.get('max_messages', 1)))
 
             if options.get('check_messages', False):
-                self._check_message_format(options.get('max_messages', 1))
+                self._check_message_format(int(options.get('max_messages', 1)))
 
             self._quit_connection()
 
