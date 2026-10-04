@@ -4,6 +4,7 @@ Runs a backup and clear of a mail box.
 import sys
 from helpers.save_emails_to_file import save_email_data_to_file
 from helpers.load_configs import ConfigLoader
+from helpers.mail_dto import create_email_dto
 from clients.client_manager import get_client
 
 
@@ -32,6 +33,7 @@ def process_config(configs):
     print('Configs: ', configs)
     for config in configs:
         client = get_client(config)
+        client.process_messages(options=config, dto_creator=create_email_dto)
         print('Client: ', client)
         print('*'*100)
 
