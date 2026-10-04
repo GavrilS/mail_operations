@@ -40,6 +40,8 @@ def process_config(configs):
             # TODO Add the backup functionality and see what options are there to split the 
             # process messages functionality when there is a delete flag to first back up and 
             # then delete the messages
+            # The backup functionality should consist of 2 options - create local backup in 
+            # a file and save the email data to a DB
         print('Messages: ', messages)
         print('*'*100)
 
