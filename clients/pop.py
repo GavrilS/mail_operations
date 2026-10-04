@@ -9,7 +9,6 @@ Functionality:
     - archive the messages in the mail box
 '''
 import poplib
-from helpers.mail_dto import EmailDTO
 from clients.basic_client import BasicClient
 
 
@@ -54,24 +53,43 @@ class PopClient(BasicClient):
         self.client.user(self.user)
         self.client.pass_(self.password)
 
-    def process_messages(self, fetch_messages=True, delete_messages=True, check_messages=False, message_number=1):
-        self._set_connection()
-
-        messages = []
-        if fetch_messages:
-            messages = self._retrieve_messages(message_number)
+    def process_messages(self, options=None, dto_creator=None):
+        '''
+        Main class method to handle the operations the user wants. For the Pop client the 
+        options dictionary includes:
+            - fetch_messages -> retrieves the message data for the specified number of the 
+            oldest messages
+            - delete_messages -> deletes the specified number of the oldest messages
+            - check_messages -> prints the message structure of the specified number of 
+            messages; better to use with just one or two
+            - message_number -> the specified number of messages to process
+        All options are False by default, except for 'message_number' which is 1 by default.
+        The last parameter is a function creating an email dto to carry the data from the 
+        different clients in a standard format.
+        '''
         
-        if delete_messages:
-            self._mark_messages_for_deletion(message_number)
+        messages = []
 
-        if check_messages:
-            self._check_message_format()
+        if not options or not dto_creator:
+            print('Cannot process any emails, because the required options/mail data container are not provided!')
 
-        self._quit_connection()
+        else:
+            self._set_connection()
+
+            if options.get('fetch_messages', False):
+                messages = self._retrieve_messages(options.get('message_number', 1), dto_creator)
+            
+            if options.get('delete_messages', False):
+                self._mark_messages_for_deletion(options.get('message_number', 1))
+
+            if options.get('check_messages', False):
+                self._check_message_format(options.get('message_number', 1))
+
+            self._quit_connection()
 
         return messages
 
-    def _retrieve_messages(self, num_messages=1):
+    def _retrieve_messages(self, num_messages=1, dto_creator=None):
         
         messages_to_process = []
         for i in range(num_messages):
@@ -82,8 +100,9 @@ class PopClient(BasicClient):
                     if line.startswith(v):
                         message[k] = line
                         break
+            
             messages_to_process.append(
-                EmailDTO(
+                dto_creator(
                     date=message['date'],
                     receiver=message['receiver'],
                     sender=message['sender'],
