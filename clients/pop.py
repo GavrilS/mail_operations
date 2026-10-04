@@ -62,8 +62,8 @@ class PopClient(BasicClient):
             - delete_messages -> deletes the specified number of the oldest messages
             - check_messages -> prints the message structure of the specified number of 
             messages; better to use with just one or two
-            - message_number -> the specified number of messages to process
-        All options are False by default, except for 'message_number' which is 1 by default.
+            - max_messages -> the specified number of messages to process
+        All options are False by default, except for 'max_messages' which is 1 by default.
         The last parameter is a function creating an email dto to carry the data from the 
         different clients in a standard format.
         '''
@@ -77,13 +77,13 @@ class PopClient(BasicClient):
             self._set_connection()
 
             if options.get('fetch_messages', False):
-                messages = self._retrieve_messages(options.get('message_number', 1), dto_creator)
+                messages = self._retrieve_messages(options.get('max_messages', 1), dto_creator)
             
             if options.get('delete_messages', False):
-                self._mark_messages_for_deletion(options.get('message_number', 1))
+                self._mark_messages_for_deletion(options.get('max_messages', 1))
 
             if options.get('check_messages', False):
-                self._check_message_format(options.get('message_number', 1))
+                self._check_message_format(options.get('max_messages', 1))
 
             self._quit_connection()
 

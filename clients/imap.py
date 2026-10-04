@@ -1,3 +1,13 @@
+'''
+This module is handling connecting to a mail box with imap, retrieving X number of emails 
+and archiving them.
+
+Functionality:
+    - connect to email box
+    - retrieve assigned number of messages
+    - save them for future analysis
+    - archive the messages in the mail box
+'''
 from imapclient import IMAPClient
 from clients.basic_client import BasicClient
 
@@ -25,6 +35,18 @@ class ImapHandler(BasicClient):
         self.server = client_args['server']
 
     def process_messages(self, num_messages=1, fetch_messages=False, delete_messages=False, trash_folder=None, list_folders=False):
+        '''
+        Main class method to handle the operations the user wants. For the Imap client the 
+        options dictionary includes:
+            - fetch_messages -> retrieves the message data for the specified number of the 
+            oldest messages
+            - delete_messages -> deletes the specified number of the oldest messages
+            - list_folders -> prints the structure of the email box folders
+            - max_messages -> the specified number of messages to process
+        All options are False by default, except for 'max_messages' which is 1 by default.
+        The last parameter is a function creating an email dto to carry the data from the 
+        different clients in a standard format.
+        '''
         with IMAPClient(self.server, ssl=True) as client:
             client.login(self.email, self.password)
             client.select_folder(DEFAULT_FOLDER)
